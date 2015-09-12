@@ -17,15 +17,15 @@ app.controller("CardController", function($scope){
 
     switch($scope.cardRule) {
       case "line":
-        straightLine()
+        straightLine();
       case "fullCard":
-
+        fullCard();
       case "corners":
-
+        corners();
       case "outline":
-
+        outline();
       case "hashtag":
-      
+        hashtag();
     }
   }
 
@@ -67,5 +67,73 @@ app.controller("CardController", function($scope){
       $scope.winner = true
     }
   }
+
+  var fullCard = function( ) {
+
+    _.every($scope.board, function(column){
+
+      var cardComplete =  _.every(column, _.identity)
+      
+      if (cardComplete) {
+        $scope.winner = true;
+      }
+
+    })
+  }
+
+  var corners = function() {
+
+    var numCols = $scope.board.length;
+    var firstCol = $scope.board[0];
+    var lastCol = $scope.board[(numCols -1)];
+    
+    if (firstCol[0] === 1 && firstCol[(firstCol.length - 1)] === 1 && 
+        lastCol[0] === 1 && lastCol[(firstCol.length - 1)]) {
+      $scope.winner = true;
+    }
+
+  }
+
+  var hashtag = function() {
+    
+    for (var i = 0; i < $scope.board.length; i++) {
+
+      var col = $scope.board[i];
+
+      if (i % 2 === 1){
+        if (!(col[0]) && !(col[2]) && !(col[4])) {
+          return;
+        }
+      }
+
+      if (!(col[1] && col[3])) {
+
+        return;
+      }
+    }
+
+    $scope.winner = true;
+  }
+
+  var outline = function() {
+
+    for (var i = 0; i < $scope.board.length; i++) {
+
+      var col = $scope.board[i];
+
+      if (!(col[0] && col[4])) {
+        return;
+      }
+      if (i === 0 || i === 4) {
+        if (!(col[1] || col[2] || col[3])) {
+          return;
+        }
+      }
+    }
+    $scope.winner = true;
+    
+  }
+
+  
 
 })
